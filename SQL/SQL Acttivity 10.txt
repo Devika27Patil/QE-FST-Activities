@@ -1,0 +1,39 @@
+-- Activity 10 --
+1.
+SELECT *
+FROM ORDERS
+WHERE salesman_id = (
+    SELECT salesman_id
+    FROM CUSTOMERS
+    WHERE customer_id = 3007
+);
+
+2.
+SELECT *
+FROM orders 
+WHERE salesman_id IN (
+    SELECT salesman_id
+    FROM SALESMAN
+    WHERE salesman_city = 'New York'
+);
+
+3.
+SELECT COUNT (*)
+FROM CUSTOMERS
+WHERE grade > (
+    SELECT AVG(grade)
+    From CUSTOMERS
+    WHERE city = 'New York'
+);
+
+4.
+SELECT * 
+From ORDERS
+WHERE salesman_id IN (
+    SELECT salesman_id
+    FROM salesman
+    WHERE commission = (
+        SELECT MAX(commission)
+        FROM salesman
+    )
+);

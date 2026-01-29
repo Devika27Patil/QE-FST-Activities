@@ -1,0 +1,57 @@
+-- Activity 11 --
+1.
+--For Salesman
+SELECT s.salesman_id,
+       s.name,
+       COUNT(o.ord_no) AS total_orders
+FROM salesman s
+JOIN orders o
+ON s.salesman_id = o.salesman_id
+GROUP BY s.salesman_id, s.name
+HAVING COUNT(o.ord_no) > 1
+ORDER BY s.name;
+
+
+--For Customer
+SELECT c.customer_id,
+       c.cust_name,
+       COUNT(o.ord_no) AS total_orders
+FROM customer c
+JOIN orders o
+ON c.customer_id = o.customer_id
+GROUP BY c.customer_id, c.cust_name
+HAVING COUNT(o.ord_no) > 1
+ORDER BY c.cust_name;
+
+
+2.
+SELECT o.ord_date,
+       s.salesman_id,
+       s.name,
+       o.purch_amt,
+       CASE
+         WHEN o.purch_amt = (
+              SELECT MAX(purch_amt)
+              FROM orders
+              WHERE ord_date = o.ord_date
+         ) THEN 'HIGHEST'
+         WHEN o.purch_amt = (
+              SELECT MIN(purch_amt)
+              FROM orders
+              WHERE ord_date = o.ord_date
+         ) THEN 'LOWEST'
+       END AS order_type
+FROM orders o
+JOIN salesman s
+ON o.salesman_id = s.salesman_id
+WHERE o.purch_amt IN (
+      SELECT MAX(purch_amt)
+      FROM orders
+      GROUP BY ord_date
+)
+OR o.purch_amt IN (
+      SELECT MIN(purch_amt)
+      FROM orders
+      GROUP BY ord_date
+)
+ORDER BY o.ord_date;
